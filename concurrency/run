@@ -1,0 +1,6 @@
+set -e
+
+g++ main.cc -std=c++14 -pthread
+
+./a.out
+#valgrind --leak-check=full ./a.out
