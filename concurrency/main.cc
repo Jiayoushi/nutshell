@@ -13,6 +13,8 @@ void test_concurrent_queue() {
 
   auto work = 
     [&cq](uint64_t total_task) {
+      std::cout << std::this_thread::get_id() << std::endl;
+
       uint64_t sum = 0;
       for (int i = 0; i < total_task; ++i) {
         std::shared_ptr<int> val;
@@ -35,7 +37,8 @@ void test_concurrent_queue() {
   const int kTotalThreads = 10;
   const uint64_t kTotalWork = kWorkPerThread * kTotalThreads;
   for (int i = 0; i < kTotalThreads; ++i) {
-    futures.emplace_back(std::move(std::async(work, kWorkPerThread)));
+    futures.emplace_back(std::move(
+      std::async(std::launch::async, work, kWorkPerThread)));
   }
 
   for (int i = 1; i <= kTotalWork; ++i) {
